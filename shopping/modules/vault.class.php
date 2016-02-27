@@ -25,7 +25,7 @@ if ( class_exists( "LD_Vault" ) == false ) {
 			$SQL_Q = $this->query("SELECT 1 FROM warehouse WHERE Accountid='". $_SESSION['Login'] ."'");
 			if(mssql_num_rows($SQL_Q) == 0) $this->query("INSERT INTO warehouse (AccountID, Items, Money, EndUseDate, DbVersion, pw) VALUES ('". $_SESSION['Login'] ."', 0x".str_pad( "", $this->Varbinary*2, "F" ).", 0, GetDate(), ".constant("SYSTEM_DBVERSION").", 0);");
 			$SQL_Q = $this->query("DECLARE @vault varbinary(". $this->Varbinary ."); SELECT @vault = items FROM warehouse WHERE AccountID='".$_SESSION['Login']."' " . (constant("ENCGAMES_S6") === true ? " AND VaultID = 1" : NULL) . "; PRINT @vault;");
-			$this->Vault_Content = substr(mssql_get_last_message($SQL_Q),2);
+			$this->Vault_Content = substr(mssql_get_last_message(),2);
 		}
 		public function CutSlotsVault()
 		{
