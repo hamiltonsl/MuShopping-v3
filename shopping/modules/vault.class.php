@@ -12,7 +12,7 @@ if ( class_exists( "LD_Vault" ) == false ) {
         public $SlotCounts = null;
 		public function __construct() 
 		{ 
-			//construct nï¿½o disponivel pois estï¿½ como extends
+			//construct não disponivel pois está como extends
 		}
 		public function GetVaultContent()
 		{ 
@@ -226,10 +226,10 @@ if ( class_exists( "LD_Vault" ) == false ) {
 						for($LTemp = 0; $LTemp < $this->Y; $LTemp++)
 						{       
 							$tempI = $i+1;
-							if(($tempI % 8) == 0 && $this->X > 1) $Full = true; //Necessï¿½rio para nï¿½o adcionar o item partindo ele para outra linha.
-							elseif(($tempI % 8) == 7 && $this->X > 2) $Full = true; //Necessï¿½rio para nï¿½o adcionar o item partindo ele para outra linha.
-							elseif(($tempI % 8) == 6 && $this->X > 3) $Full = true; //Necessï¿½rio para nï¿½o adcionar o item partindo ele para outra linha.
-							elseif(($tempI % 8) == 5 && $this->X > 4) $Full = true; //Necessï¿½rio para nï¿½o adcionar o item partindo ele para outra linha.
+							if(($tempI % 8) == 0 && $this->X > 1) $Full = true; //Necessário para não adcionar o item partindo ele para outra linha.
+							elseif(($tempI % 8) == 7 && $this->X > 2) $Full = true; //Necessário para não adcionar o item partindo ele para outra linha.
+							elseif(($tempI % 8) == 6 && $this->X > 3) $Full = true; //Necessário para não adcionar o item partindo ele para outra linha.
+							elseif(($tempI % 8) == 5 && $this->X > 4) $Full = true; //Necessário para não adcionar o item partindo ele para outra linha.
 							elseif($this->Vault_Slots[$i+$CTemp]['Free'] == false || $this->Vault_Slots[$i+$CTemp+(8*$LTemp)]['Free'] == false) $Full = true; else continue(1);
 						}
 					}
@@ -326,7 +326,7 @@ if ( class_exists( "LD_Vault" ) == false ) {
 							$Skill = true;
 							$lslo -= 128;
 						}
-						$resto_div = $lslo % 8; //Sofre subtraï¿½ï¿½es
+						$resto_div = $lslo % 8; //Sofre subtrações
 						$resto_div_2 = $lslo % 8; //Mantem o valor para ver o level
 						if($resto_div == 0) {
 							$Luck = false;
@@ -353,7 +353,7 @@ if ( class_exists( "LD_Vault" ) == false ) {
 					$i++;
 				}
 			}
-			imagestring($this->Vault_Photo, 3, 33, 663, "Visualizaï¿½ï¿½o nï¿½o ï¿½ 100% garantida.", $yellow);
+			imagestring($this->Vault_Photo, 3, 33, 663, "Visualização não é 100% garantida.", $yellow);
 		}
 		public function WriteVault() 
 		{
