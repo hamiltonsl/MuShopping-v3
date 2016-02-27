@@ -40,8 +40,8 @@ if ( class_exists( "LD_Recover_Lost_Item" ) == false ) {
 		public function VerifyBuy()
 		{
             global $ODBC;
-			$ODBC_Q = $ODBC->query("SELECT * FROM LogSolds WHERE number=". (int)$this->BuyID ." AND login = '". $_SESSION['Login'] ."'"); 
-			$ODBC_R = odbc_fetch_object($ODBC_Q);
+			$ODBC_Q = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[LogSolds] WHERE number=". (int)$this->BuyID ." AND login = '". $_SESSION['Login'] ."'"); 
+			$ODBC_R = mssql_fetch_object($ODBC_Q);
             if($ODBC_R->login != $_SESSION['Login']) exit(Print_error("<ul><li>Erro, essa compra n&atilde;o foi efetuada pelo seu login.</li></ul>"));
 			$this->ProductID 		= $ODBC_R->itemNumber;
 			$this->ProductSerial	= $ODBC_R->serial;
@@ -73,8 +73,8 @@ if ( class_exists( "LD_Recover_Lost_Item" ) == false ) {
         private function Find_Details()
         {
             global $ODBC;
-            $ODBC_Q = $ODBC->query("SELECT ID, TP, X, Y, DUR, CATEGORIA FROM Items WHERE Number='".$this->ProductID."'");
-            $ODBC_R = odbc_fetch_object($ODBC_Q);
+            $ODBC_Q = $ODBC->query("SELECT ID, TP, X, Y, DUR, CATEGORIA FROM [ldShopV3].[dbo].[Items] WHERE Number='".$this->ProductID."'");
+            $ODBC_R = mssql_fetch_object($ODBC_Q);
             $this->ID = $ODBC_R->ID;
             $this->TP = $ODBC_R->TP;         
             $this->X = $ODBC_R->X;
@@ -140,7 +140,7 @@ if ( class_exists( "LD_Recover_Lost_Item" ) == false ) {
 		public function WriteLog()
 		{
             global $ODBC;
-			$ODBC->query("UPDATE LogSolds SET recovery = recovery + 1 WHERE number = ". (int) $this->BuyID);
+			$ODBC->query("UPDATE [ldShopV3].[dbo].[LogSolds] SET recovery = recovery + 1 WHERE number = ". (int) $this->BuyID);
 		}
 	}
 }

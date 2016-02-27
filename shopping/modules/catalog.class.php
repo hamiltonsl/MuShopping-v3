@@ -12,15 +12,15 @@ if ( class_exists( "LD_Catalog" ) == false ) {
             Require_File("modules/history.class.php");
             $LD_History = new LD_History(false, true);
                     
-            $searchKitsQ = $ODBC->query("SELECT * FROM Kits WHERE active = 1");
-            while($searchKits = odbc_fetch_object($searchKitsQ))
+            $searchKitsQ = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[Kits] WHERE active = 1");
+            while($searchKits = mssql_fetch_object($searchKitsQ))
             {
                 print "<div class=\"quadros\">\nNome do Kit: <strong>{$searchKits->kitName}</strong><br />\nPre&ccedil;o total: <strong>{$searchKits->priceFix}</strong> ".GOLDNAME."<br />\nVendido: <strong>{$searchKits->solds}</strong> vez(es)<br />\n<div id='kitNumber{$searchKits->Number}' style='display: none'><strong>Produtos que est&atilde;o incluidos no kit: </strong>";
-                $searchItensKitQ = $ODBC->query("SELECT * FROM KitsItemsDetails WHERE kitNumber = ". $searchKits->Number );
-                while($searchItensKit = odbc_fetch_object($searchItensKitQ))
+                $searchItensKitQ = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[KitsItemsDetails] WHERE kitNumber = ". $searchKits->Number );
+                while($searchItensKit = mssql_fetch_object($searchItensKitQ))
                 {
-                    $searchItemDetailsQ = $ODBC->query("SELECT NAME,EXE,JH,RF,photoItem,photoItemAnc FROM Items WHERE Number = '{$searchItensKit->itemNumber}'");
-                    $searchItemDetails = odbc_fetch_object($searchItemDetailsQ);
+                    $searchItemDetailsQ = $ODBC->query("SELECT NAME,EXE,JH,RF,photoItem,photoItemAnc FROM [ldShopV3].[dbo].[Items] WHERE Number = '{$searchItensKit->itemNumber}'");
+                    $searchItemDetails = mssql_fetch_object($searchItemDetailsQ);
                     $LD_History->GetNameOptions($searchItemDetails->EXE);
                     $LD_History->GetNameOptionJH($searchItensKit->fixJH, $searchItemDetails->JH);
                     $LD_History->GetNameOptionRefine(($searchItensKit->fixRefine == 1 ? "true":"false"),$searchItemDetails->RF);
@@ -80,8 +80,8 @@ if ( class_exists( "LD_Catalog" ) == false ) {
                 case "All": $ODBC_Party = " ORDER BY solds DESC"; break;
                 default: $ODBC_Party = " AND CATEGORIA='".$ShowCatalogType."' ORDER BY solds DESC"; break;
             }
-            $ODBC_Q = $ODBC->query("SELECT * FROM Items WHERE insertShop = 1 ". $ODBC_Party);
-            while($ODBC = odbc_fetch_object($ODBC_Q))
+            $ODBC_Q = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[Items] WHERE insertShop = 1 ". $ODBC_Party);
+            while($ODBC = mssql_fetch_object($ODBC_Q))
             {
                 print "<div class=\"quadros\">
                         <table border=\"0\">
@@ -117,9 +117,9 @@ if ( class_exists( "LD_Catalog" ) == false ) {
 		public function GetProductDetails($ProductID)
 		{
 			global $tpl, $LD_General, $ODBC;
-			$ODBC_Q = $ODBC->query("SELECT * FROM Items WHERE Number='".$ProductID."'");
-			$ODBC_R = odbc_fetch_object($ODBC_Q);
-			if(odbc_num_rows($ODBC_Q) == 0) exit(Print_error("<script type=\"text/javascript\">alert(\"Desculpe, esse produto não encontrado.\"); //history.go(-1);</script>"));
+			$ODBC_Q = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[Items] WHERE Number='".$ProductID."'");
+			$ODBC_R = mssql_fetch_object($ODBC_Q);
+			if(mssql_num_rows($ODBC_Q) == 0) exit(Print_error("<script type=\"text/javascript\">alert(\"Desculpe, esse produto não encontrado.\"); //history.go(-1);</script>"));
 			$tpl->set("ProductID", $ProductID);
 			$tpl->set("ProductName", $ODBC_R->NAME);
 			$tpl->set("ProductPhoto", $ODBC_R->photoItem);
@@ -186,8 +186,8 @@ if ( class_exists( "LD_Catalog" ) == false ) {
             }   
             else
             {
-                $SelectOptionsJhQ = $ODBC->query("SELECT * FROM ItemsJewelOfHarmony WHERE TP = '{$ODBC_R->JH}' ORDER BY [Number]");
-                while($SelectOptionsJh = odbc_fetch_array($SelectOptionsJhQ))
+                $SelectOptionsJhQ = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[ItemsJewelOfHarmony] WHERE TP = '{$ODBC_R->JH}' ORDER BY [Number]");
+                while($SelectOptionsJh = mssql_fetch_array($SelectOptionsJhQ))
                 {
                     if(substr($SelectOptionsJh['NM'],0 ,8) == "NONE JoH") continue;  
                     
@@ -210,8 +210,8 @@ if ( class_exists( "LD_Catalog" ) == false ) {
             }   
             else
             {
-                $SelectOptionRefineQ = $ODBC->query("SELECT prefx1, prefx2 FROM ItemsRefinery WHERE ID={$ODBC_R->RF}");
-                $SelectOptionRefine = odbc_fetch_object($SelectOptionRefineQ);  
+                $SelectOptionRefineQ = $ODBC->query("SELECT prefx1, prefx2 FROM [ldShopV3].[dbo].[ItemsRefinery] WHERE ID={$ODBC_R->RF}");
+                $SelectOptionRefine = mssql_fetch_object($SelectOptionRefineQ);  
                 $tpl->set("OptionRadioRF", $SelectOptionRefine->prefx1.", ".$SelectOptionRefine->prefx2);    
             }
             
@@ -353,8 +353,8 @@ if ( class_exists( "LD_Catalog" ) == false ) {
                     }
                     /*for($iSocketCount = 0, $iSocketIncrement = count($typesSockets); $iSocketCount < $iSocketIncrement; $iSocketCount++)
                     {
-                        $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, ID, S1, S2, S3, S4, S5 FROM ItemsSocket WHERE TP = ".$typesSockets[$iSocketCount]);
-                        while($SelectOptionsSocket = odbc_fetch_array($SelectOptionsSocketQ))
+                        $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, ID, S1, S2, S3, S4, S5 FROM [ldShopV3].[dbo].[ItemsSocket] WHERE TP = ".$typesSockets[$iSocketCount]);
+                        while($SelectOptionsSocket = mssql_fetch_array($SelectOptionsSocketQ))
                         {                                                                      
                             $this->selectOptionsSocketItemTmp[0] .= "<option value=\"". ($SelectOptionsSocket['ID']) ."\">{$SelectOptionsSocket['ST']} ({$SelectOptionsSocket['NM']} + {$SelectOptionsSocket['S1']})</option>\n";
                             $this->selectOptionsSocketItemTmp[1] .= "<option value=\"". ($SelectOptionsSocket['ID']+50) ."\">{$SelectOptionsSocket['ST']} ({$SelectOptionsSocket['NM']} + {$SelectOptionsSocket['S2']})</option>\n";

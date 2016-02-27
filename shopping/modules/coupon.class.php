@@ -8,8 +8,8 @@ if ( class_exists( "LD_Coupon" ) == false ) {
 		public function __construct($couponCode) 
 		{
 			global $ODBC;
-			$findQ = $ODBC->query("SELECT * FROM CouponCodes WHERE couponCode='".$couponCode."'");
-			$find = odbc_fetch_object($findQ);
+			$findQ = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[CouponCodes] WHERE couponCode='".$couponCode."'");
+			$find = mssql_fetch_object($findQ);
 			if($find->active == 0) exit(Print_error("Esse cupom est&aacute; desativado ou &eacute; inv&aacute;lido."));   
             elseif($find->dateBegin > time()) exit(Print_error("Esse cupom inicia em: ". date("d/m/Y g:i a", $find->dateBegin)));  
             elseif(time() > $find->dateEnd) exit(Print_error("Esse cupom venceu em: ". date("d/m/Y g:i a", $find->dateEnd)));  

@@ -73,8 +73,8 @@ if ( class_exists( "LD_FinishBuy" ) == false ) {
         private function Find_Details()
         {
             global $ODBC;
-            $ODBC_Q = $ODBC->query("SELECT NAME, ID, CATEGORIA, TP, X, Y, DUR, LVL, RF, JH, Socket, ANC, SetItem1, SetItem2, price, priceLevel, priceOption, priceSkill, priceLuck, priceAncient, priceOptExc, priceJh, priceRefine, priceSocket, insertShop, maxOptExcSel FROM Items WHERE Number='".$this->ProductID."'");
-            $ODBC_R = odbc_fetch_object($ODBC_Q);
+            $ODBC_Q = $ODBC->query("SELECT NAME, ID, CATEGORIA, TP, X, Y, DUR, LVL, RF, JH, Socket, ANC, SetItem1, SetItem2, price, priceLevel, priceOption, priceSkill, priceLuck, priceAncient, priceOptExc, priceJh, priceRefine, priceSocket, insertShop, maxOptExcSel FROM [ldShopV3].[dbo].[Items] WHERE Number='".$this->ProductID."'");
+            $ODBC_R = mssql_fetch_object($ODBC_Q);
             require("modules/sockets.lib.php");
             if($ODBC_R->Socket == 0 && 
             (
@@ -372,9 +372,9 @@ if ( class_exists( "LD_FinishBuy" ) == false ) {
         private function WriteLog()
         {
             global $LD_Items;
-            $ODBC = new LD_ODBC();
-            if($this->buyKit == false) $ODBC->query("UPDATE Items SET solds=solds+1 WHERE Number='".$this->ProductID."'");
-            $ODBC->query("INSERT INTO LogSolds (`login`, `itemNumber`, `serial`, `level`, `option`, `luck`, `skill`, `ancient`, `excop1`, `excop2`, `excop3`, `excop4`, `excop5`, `excop6`, `jh`, `refine`, `socket1`, `socket2`, `socket3`, `socket4`, `socket5`, `socket1_int`, `socket2_int`, `socket3_int`, `socket4_int`, `socket5_int`, `price`, `data`, `recovery`, `type`) VALUES 
+            $ODBC = $this;
+            if($this->buyKit == false) $ODBC->query("UPDATE [ldShopV3].[dbo].[Items] SET solds=solds+1 WHERE Number='".$this->ProductID."'");
+            $ODBC->query("INSERT INTO [ldShopV3].[dbo].[LogSolds] ([login], [itemNumber], [serial], [level], [option], [luck], [skill], [ancient], [excop1], [excop2], [excop3], [excop4], [excop5], [excop6], [jh], [refine], [socket1], [socket2], [socket3], [socket4], [socket5], [socket1_int], [socket2_int], [socket3_int], [socket4_int], [socket5_int], [price], [data], [recovery], [type]) VALUES 
                                                           ('".$_SESSION['Login']."','".$this->ProductID."','".$LD_Items->Item_Serial."','".$this->Item_Level."','".$this->Item_Option."','".$this->Item_Luck."','".$this->Item_Skill."','".$this->Item_Ancient."','".$this->Item_OpExc_1."','".$this->Item_OpExc_2."','".$this->Item_OpExc_3."','".$this->Item_OpExc_4."','".$this->Item_OpExc_5."','".$this->Item_OpExc_6."','".$this->Item_JH."','".$this->Item_Refine."','".$this->Item_Socket_Slot_1."','".$this->Item_Socket_Slot_2."','".$this->Item_Socket_Slot_3."','".$this->Item_Socket_Slot_4."','".$this->Item_Socket_Slot_5."','".$this->Item_Socket_Slot_1_Option."','".$this->Item_Socket_Slot_2_Option."','".$this->Item_Socket_Slot_3_Option."','".$this->Item_Socket_Slot_4_Option."','".$this->Item_Socket_Slot_5_Option."','".(int)$this->End_Price."','".time()."','0','". ($this->buyKit == false ? "common":"kit") ."')");
             if($this->buyKit == false) print "<ul><li>Gravando Log.</li></ul>";            
         }

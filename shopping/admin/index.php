@@ -54,13 +54,8 @@ if(defined("HOST_SQL") == false) exit(Print_error("HOST_SQL",1));
 if(defined("DATABASE_SQL") == false) exit(Print_error("DATABASE_SQL",1));
 if(defined("USER_SQL") == false) exit(Print_error("USER_SQL",1));
 if(defined("PWD_SQL") == false) exit(Print_error("PWD_SQL",1));
-if(defined("DNS_ODBC") == false) exit(Print_error("DNS_ODBC",1));
-if(defined("USER_ODBC") == false) exit(Print_error("USER_ODBC",1));
-if(defined("PWD_ODBC") == false) exit(Print_error("PWD_ODBC",1));
 Require_File("../modules/mssql.class.php");
-$SQL = new LD_Mssql();
-Require_File("../modules/odbc.class.php");
-$ODBC = new LD_ODBC();
+$ODBC = $SQL = new LD_Mssql();
 
 switch(SYSTEM_ITEMS)
 {

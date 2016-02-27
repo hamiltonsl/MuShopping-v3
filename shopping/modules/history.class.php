@@ -21,16 +21,16 @@ if ( class_exists( "LD_History" ) == false ) {
 		public function GetTotalBuys()
 		{
 			global $tpl, $ODBC;                            
-            $ODBC_Q = $ODBC->query("SELECT count(1) as total FROM LogSolds WHERE login = '". $_SESSION['Login'] ."' AND type='common'");
-            $ODBC_R = odbc_fetch_object($ODBC_Q);
+            $ODBC_Q = $ODBC->query("SELECT count(1) as total FROM [ldShopV3].[dbo].[LogSolds] WHERE login = '". $_SESSION['Login'] ."' AND type='common'");
+            $ODBC_R = mssql_fetch_object($ODBC_Q);
             $tpl->set("TOTAL_BUYS",(int)$ODBC_R->total);
             
-            $ODBC_Q = $ODBC->query("SELECT count(1) as total FROM LogSoldsKits WHERE login = '". $_SESSION['Login'] ."'");
-            $ODBC_R = odbc_fetch_object($ODBC_Q);
+            $ODBC_Q = $ODBC->query("SELECT count(1) as total FROM [ldShopV3].[dbo].[LogSoldsKits] WHERE login = '". $_SESSION['Login'] ."'");
+            $ODBC_R = mssql_fetch_object($ODBC_Q);
             $tpl->set("TOTAL_BUYSKITS",(int)$ODBC_R->total);
 			
-			$ODBC_Q = $ODBC->query("SELECT count(1) as total FROM LogsPayments WHERE login = '". $_SESSION['Login'] ."'");
-			$ODBC_R = odbc_fetch_object($ODBC_Q);
+			$ODBC_Q = $ODBC->query("SELECT count(1) as total FROM [ldShopV3].[dbo].[LogsPayments] WHERE login = '". $_SESSION['Login'] ."'");
+			$ODBC_R = mssql_fetch_object($ODBC_Q);
 			$tpl->set("TOTAL_CONFIRMS",(int)$ODBC_R->total);
 		}
 		public function GetNameOptions($type)
@@ -109,8 +109,8 @@ if ( class_exists( "LD_History" ) == false ) {
             if($hexVal == "00") $this->textHarmonyOption = "N&atilde;o";
             else
             {
-                $findHarmonyOptionNameQ = $ODBC->query("SELECT NM,prefx".substr($hexVal,1)." as lvl FROM ItemsJewelOfHarmony WHERE TP='{$typeItemJH}'");
-                $findHarmonyOptionName = odbc_fetch_object($findHarmonyOptionNameQ);
+                $findHarmonyOptionNameQ = $ODBC->query("SELECT NM,prefx".substr($hexVal,1)." as lvl FROM [ldShopV3].[dbo].[ItemsJewelOfHarmony] WHERE TP='{$typeItemJH}'");
+                $findHarmonyOptionName = mssql_fetch_object($findHarmonyOptionNameQ);
                 $this->textHarmonyOption = $findHarmonyOptionName->NM.$findHarmonyOptionName->lvl;         
             }      
         }
@@ -120,8 +120,8 @@ if ( class_exists( "LD_History" ) == false ) {
             if($refine == "false") $this->textRefineOption = "N&atilde;o";
             else
             {
-                $findRefineOptionNameQ = $ODBC->query("SELECT prefx1,prefx2 FROM ItemsRefinery WHERE ID={$typeItemRF}");
-                $findRefineOptionName = odbc_fetch_object($findRefineOptionNameQ);
+                $findRefineOptionNameQ = $ODBC->query("SELECT prefx1,prefx2 FROM [ldShopV3].[dbo].[ItemsRefinery] WHERE ID={$typeItemRF}");
+                $findRefineOptionName = mssql_fetch_object($findRefineOptionNameQ);
                 $this->textRefineOption = $findRefineOptionName->prefx1.", ".$findRefineOptionName->prefx2;         
             }    
         }
@@ -152,8 +152,8 @@ if ( class_exists( "LD_History" ) == false ) {
             else
             {                                 
                 $socketNum = $socket1_int;
-                $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, S1 FROM ItemsSocket WHERE ID = {$socketNum}");
-                $SelectOptionsSocket = odbc_fetch_object($SelectOptionsSocketQ);                           
+                $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, S1 FROM [ldShopV3].[dbo].[ItemsSocket] WHERE ID = {$socketNum}");
+                $SelectOptionsSocket = mssql_fetch_object($SelectOptionsSocketQ);                           
                 $this->socketItemOptionName[0] = $SelectOptionsSocket->ST." (".$SelectOptionsSocket->NM ." + ". $SelectOptionsSocket->S1.")"; ;            
             }
             //SocketItem 02 Parse  
@@ -161,8 +161,8 @@ if ( class_exists( "LD_History" ) == false ) {
             else
             {
                 $socketNum = $socket2_int - 50;
-                $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, S2 FROM ItemsSocket WHERE ID = {$socketNum}");
-                $SelectOptionsSocket = odbc_fetch_object($SelectOptionsSocketQ);
+                $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, S2 FROM [ldShopV3].[dbo].[ItemsSocket] WHERE ID = {$socketNum}");
+                $SelectOptionsSocket = mssql_fetch_object($SelectOptionsSocketQ);
                 $this->socketItemOptionName[1] = $SelectOptionsSocket->ST." (".$SelectOptionsSocket->NM ." + ". $SelectOptionsSocket->S2.")"; ;          
             } 
             //SocketItem 03 Parse  
@@ -170,8 +170,8 @@ if ( class_exists( "LD_History" ) == false ) {
             else
             {
                 $socketNum = $socket3_int - 100;
-                $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, S3 FROM ItemsSocket WHERE ID = {$socketNum}");
-                $SelectOptionsSocket = odbc_fetch_object($SelectOptionsSocketQ);
+                $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, S3 FROM [ldShopV3].[dbo].[ItemsSocket] WHERE ID = {$socketNum}");
+                $SelectOptionsSocket = mssql_fetch_object($SelectOptionsSocketQ);
                 $this->socketItemOptionName[2] = $SelectOptionsSocket->ST." (".$SelectOptionsSocket->NM ." + ". $SelectOptionsSocket->S3.")"; ;          
             }
             //SocketItem 04 Parse  
@@ -179,8 +179,8 @@ if ( class_exists( "LD_History" ) == false ) {
             else
             {
                 $socketNum = $socket4_int - 150;
-                $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, S4 FROM ItemsSocket WHERE ID = {$socketNum}");
-                $SelectOptionsSocket = odbc_fetch_object($SelectOptionsSocketQ);
+                $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, S4 FROM [ldShopV3].[dbo].[ItemsSocket] WHERE ID = {$socketNum}");
+                $SelectOptionsSocket = mssql_fetch_object($SelectOptionsSocketQ);
                 $this->socketItemOptionName[3] = $SelectOptionsSocket->ST." (".$SelectOptionsSocket->NM ." + ". $SelectOptionsSocket->S4.")"; ;          
             }
             //SocketItem 05 Parse  
@@ -188,20 +188,20 @@ if ( class_exists( "LD_History" ) == false ) {
             else
             {
                 $socketNum = $socket5_int - 200;
-                $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, S5 FROM ItemsSocket WHERE ID = {$socketNum}");
-                $SelectOptionsSocket = odbc_fetch_object($SelectOptionsSocketQ);
+                $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, S5 FROM [ldShopV3].[dbo].[ItemsSocket] WHERE ID = {$socketNum}");
+                $SelectOptionsSocket = mssql_fetch_object($SelectOptionsSocketQ);
                 $this->socketItemOptionName[4] = $SelectOptionsSocket->ST." (".$SelectOptionsSocket->NM ." + ". $SelectOptionsSocket->S5.")"; ;          
             }*/  
         }           
         public function GetListBoxBuys($Recover_Lost_Item)
         {
             global $ODBC;
-            $FindSoldsQuery = $ODBC->query("SELECT * FROM LogSolds WHERE login = '". $_SESSION['Login'] ."' AND type='common' ORDER BY number DESC");
-            while($FindSolds = odbc_fetch_object($FindSoldsQuery))
+            $FindSoldsQuery = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[LogSolds] WHERE login = '". $_SESSION['Login'] ."' AND type='common' ORDER BY number DESC");
+            while($FindSolds = mssql_fetch_object($FindSoldsQuery))
             {    
                 $IDI++;
-                $FindItemDetailsQuery = $ODBC->query("SELECT NAME,EXE,photoItem,photoItemAnc,JH,RF,SetItem1,SetItem2 FROM Items WHERE Number = '". $FindSolds->itemNumber ."'");
-                $FindItemDetails = odbc_fetch_object($FindItemDetailsQuery); 
+                $FindItemDetailsQuery = $ODBC->query("SELECT NAME,EXE,photoItem,photoItemAnc,JH,RF,SetItem1,SetItem2 FROM [ldShopV3].[dbo].[Items] WHERE Number = '". $FindSolds->itemNumber ."'");
+                $FindItemDetails = mssql_fetch_object($FindItemDetailsQuery); 
                 $this->GetNameOptions($FindItemDetails->EXE);                 
                 $this->GetNameOptionJH($FindSolds->jh, $FindItemDetails->JH);
                 $this->GetNameOptionRefine($FindSolds->refine, $FindItemDetails->RF);
@@ -247,20 +247,20 @@ if ( class_exists( "LD_History" ) == false ) {
         public function GetListBoxBuysKits($Recover_Lost_Item)
         {         
             global $ODBC;  
-            $findKitsSoldsQ = $ODBC->query("SELECT * FROM LogSoldsKits WHERE login = '". $_SESSION['Login'] ."' ORDER BY Number DESC"); 
-            while($findKitsSolds = odbc_fetch_object($findKitsSoldsQ))
+            $findKitsSoldsQ = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[LogSoldsKits] WHERE login = '". $_SESSION['Login'] ."' ORDER BY Number DESC"); 
+            while($findKitsSolds = mssql_fetch_object($findKitsSoldsQ))
             {                                               //var_dump($findKitsSolds);
-                $findKitDetailsQuery = $ODBC->query("SELECT * FROM Kits WHERE Number = ". $findKitsSolds->kitNumber);
-                $findKitDetails = odbc_fetch_object($findKitDetailsQuery);  //var_dump($findKitDetails);
+                $findKitDetailsQuery = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[Kits] WHERE Number = ". $findKitsSolds->kitNumber);
+                $findKitDetails = mssql_fetch_object($findKitDetailsQuery);  //var_dump($findKitDetails);
                 $this->tmp_box_list .= "<div class=\"quadros\">\nNome do Kit: <strong>{$findKitDetails->kitName}</strong><br />\nPre&ccedil;o pago: <strong>{$findKitsSolds->price}</strong> ".GOLDNAME."<br />\nComprado em: <strong>". date("d/m/Y g:i a", $findKitsSolds->data) ."</strong><br />\n<strong>Produtos que est&atilde;o incluidos no kit:</strong> ";
-                $FindSoldsDetailsQuery = $ODBC->query("SELECT * FROM LogSoldsKitsDetails WHERE NumberSoldKit = ". $findKitsSolds->Number ." AND login = '". $_SESSION['Login'] ."'");
-                while($FindSoldsDetails = odbc_fetch_object($FindSoldsDetailsQuery))
+                $FindSoldsDetailsQuery = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[LogSoldsKitsDetails] WHERE NumberSoldKit = ". $findKitsSolds->Number ." AND login = '". $_SESSION['Login'] ."'");
+                while($FindSoldsDetails = mssql_fetch_object($FindSoldsDetailsQuery))
                 {                           //var_dump($FindSoldsDetails);
-                    $FindSoldsQuery = $ODBC->query("SELECT * FROM LogSolds WHERE login = '". $_SESSION['Login'] ."' AND type='kit' AND serial='{$FindSoldsDetails->itemSerial}'");
-                    $FindSolds = odbc_fetch_object($FindSoldsQuery);
+                    $FindSoldsQuery = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[LogSolds] WHERE login = '". $_SESSION['Login'] ."' AND type='kit' AND serial='{$FindSoldsDetails->itemSerial}'");
+                    $FindSolds = mssql_fetch_object($FindSoldsQuery);
                     $IDI++;                                                       
-                    $FindItemDetailsQuery = $ODBC->query("SELECT NAME,EXE,photoItem,photoItemAnc,JH,RF,SetItem1,SetItem2 FROM Items WHERE Number = '". $FindSoldsDetails->itemId ."'");
-                    $FindItemDetails = odbc_fetch_object($FindItemDetailsQuery); 
+                    $FindItemDetailsQuery = $ODBC->query("SELECT NAME,EXE,photoItem,photoItemAnc,JH,RF,SetItem1,SetItem2 FROM [ldShopV3].[dbo].[Items] WHERE Number = '". $FindSoldsDetails->itemId ."'");
+                    $FindItemDetails = mssql_fetch_object($FindItemDetailsQuery); 
                     $this->GetNameOptions($FindItemDetails->EXE);                 
                     $this->GetNameOptionJH($FindSolds->jh, $FindItemDetails->JH);
                     $this->GetNameOptionRefine($FindSolds->refine, $FindItemDetails->RF);
@@ -306,8 +306,8 @@ if ( class_exists( "LD_History" ) == false ) {
 		public function GetListConfirms()
 		{
             global $ODBC;
-			$ODBC_Q = $ODBC->query("SELECT * FROM LogsPayments WHERE login='". $_SESSION['Login'] ."' ORDER BY id DESC");
-			while($ODBC_R = odbc_fetch_object($ODBC_Q))
+			$ODBC_Q = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[LogsPayments] WHERE login='". $_SESSION['Login'] ."' ORDER BY id DESC");
+			while($ODBC_R = mssql_fetch_object($ODBC_Q))
 			{
 				switch($ODBC_R->status)
 				{

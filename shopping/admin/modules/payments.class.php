@@ -31,8 +31,8 @@ if ( class_exists( "Payments" ) == false ) {
 		private function Find_Number_Confirmations($status)
 		{
 			global $tpl, $ODBC;
-			$findPaymentsQuery = $ODBC->query("SELECT count(1) as countResult FROM LogsPayments WHERE status = ". $status);
-			$findPayments = odbc_fetch_object($findPaymentsQuery);
+			$findPaymentsQuery = $ODBC->query("SELECT count(1) as countResult FROM [ldShopV3].[dbo].[LogsPayments] WHERE status = ". $status);
+			$findPayments = mssql_fetch_object($findPaymentsQuery);
 			$tpl->set("TOTAL_CONFIRMATIONS",(int)$findPayments->countResult);
 		}
 		private function Write_Confirmation()
@@ -47,22 +47,22 @@ if ( class_exists( "Payments" ) == false ) {
 			switch($status)
 			{
 				case 1:   
-					$ODBC->query("UPDATE `LogsPayments` SET `comentario_adm` = '". base64_encode($comentario_adm) ."', `status` = 1 WHERE `id` = ". $Id);
-				    $ODBC->query("DELETE FROM LogsReports WHERE number = {$Id}");
+					$ODBC->query("UPDATE [LogsPayments] SET [comentario_adm] = '". base64_encode($comentario_adm) ."', [status] = 1 WHERE [id] = ". $Id);
+				    $ODBC->query("DELETE FROM [ldShopV3].[dbo].[LogsReports] WHERE number = {$Id}");
                 break;
 				case 2:    
-					$ODBC->query("UPDATE LogsPayments SET `comentario_adm` = '". base64_encode($comentario_adm) ."', `status` = 2 WHERE `id` = ". $Id);
+					$ODBC->query("UPDATE [ldShopV3].[dbo].[LogsPayments] SET [comentario_adm] = '". base64_encode($comentario_adm) ."', [status] = 2 WHERE [id] = ". $Id);
 					$this->query("UPDATE ". GOLDTABLE ." SET ". GOLDCOLUMN ." = ". GOLDCOLUMN ." + ". $golds ." WHERE ". GOLDMEMBIDENT ." = '". $login ."'");
-				    $ODBC->query("INSERT INTO LogsReports (`number`, `login`, `price`, `dateInclude`) VALUES ({$Id},'{$login}','{$valor}',". time() .");");
+				    $ODBC->query("INSERT INTO [ldShopV3].[dbo].[LogsReports] ([number], [login], [price], [dateInclude]) VALUES ({$Id},'{$login}','{$valor}',". time() .");");
                 break;  
 				case 3:  
-					$ODBC->query("UPDATE LogsPayments SET `comentario_adm` = '". base64_encode($comentario_adm) ."', `status` = 3 WHERE `id` = ". $Id);
-				    $ODBC->query("DELETE FROM LogsReports WHERE number = {$Id}");
+					$ODBC->query("UPDATE [ldShopV3].[dbo].[LogsPayments] SET [comentario_adm] = '". base64_encode($comentario_adm) ."', [status] = 3 WHERE [id] = ". $Id);
+				    $ODBC->query("DELETE FROM [ldShopV3].[dbo].[LogsReports] WHERE number = {$Id}");
                 break;
 				case 4:       
-					$ODBC->query("UPDATE LogsPayments SET `comentario_adm` = '". base64_encode($comentario_adm) ."', `status` = 4 WHERE `id` = ". $Id);
+					$ODBC->query("UPDATE [ldShopV3].[dbo].[LogsPayments] SET [comentario_adm] = '". base64_encode($comentario_adm) ."', [status] = 4 WHERE [id] = ". $Id);
 					$this->query("UPDATE ". GOLDTABLE ." SET ". GOLDCOLUMN ." = ". GOLDCOLUMN ." - ". $golds ." WHERE ". GOLDMEMBIDENT ." = '". $login ."'");
-				    $ODBC->query("DELETE FROM LogsReports WHERE number = {$Id}");
+				    $ODBC->query("DELETE FROM [ldShopV3].[dbo].[LogsReports] WHERE number = {$Id}");
                 break;
 			}
 			switch($status)
@@ -77,14 +77,14 @@ if ( class_exists( "Payments" ) == false ) {
 		private function Generate_Boxes_Confirmations($status)
 		{
 			global $tpl, $ODBC;
-			$findPaymentsQuery = $ODBC->query("SELECT * FROM LogsPayments WHERE status = ". $status);
+			$findPaymentsQuery = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[LogsPayments] WHERE status = ". $status);
 			$Result_Tpl_Temp = NULL;
             
             $begin = (int)($_GET['begin'] < 0 ? 0 : $_GET['begin']);
             $records = (int)10; 
                              
             $i = -1;
-			while($findPayments = odbc_fetch_object($findPaymentsQuery))
+			while($findPayments = mssql_fetch_object($findPaymentsQuery))
 			{              
                 $i++;
                 if(isset($_GET['showAll']) == false)

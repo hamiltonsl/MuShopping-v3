@@ -30,23 +30,23 @@ if ( class_exists( "Reports" ) == false ) {
             
             if($timeOneBegin > $timeTwoBegin) return $this->Results_Reports .= "<div class=\"quadros\"><ul><li>Erro: A data inicial deve ser menor que a data final.</li></ul></div>";
                        
-            $this->findPaymentsQuery = $ODBC->query("SELECT price FROM LogsReports WHERE dateInclude > {$timeOneBegin} AND dateInclude < {$timeOneEnd}");
-            while($this->findPayments = odbc_fetch_object($this->findPaymentsQuery))
+            $this->findPaymentsQuery = $ODBC->query("SELECT price FROM [ldShopV3].[dbo].[LogsReports] WHERE dateInclude > {$timeOneBegin} AND dateInclude < {$timeOneEnd}");
+            while($this->findPayments = mssql_fetch_object($this->findPaymentsQuery))
                  $this->totalPaymentsValueOne += $this->findPayments->price;
             
-            $this->findPaymentsQuery = $ODBC->query("SELECT price FROM LogsReports WHERE dateInclude > {$timeTwoBegin} AND dateInclude < {$timeTwoEnd}");
-            while($this->findPayments = odbc_fetch_object($this->findPaymentsQuery))
+            $this->findPaymentsQuery = $ODBC->query("SELECT price FROM [ldShopV3].[dbo].[LogsReports] WHERE dateInclude > {$timeTwoBegin} AND dateInclude < {$timeTwoEnd}");
+            while($this->findPayments = mssql_fetch_object($this->findPaymentsQuery))
                  $this->totalPaymentsValueTwo += $this->findPayments->price;
                  
-            $this->findSoldsItemsOneQuery = $ODBC->query("SELECT count(1) as totalSolds FROM LogSolds WHERE data > '{$timeOneBegin}' AND data < '{$timeOneEnd}'");
-            $this->findSoldsItemsOne = odbc_fetch_object($this->findSoldsItemsOneQuery);
-            $this->findSoldsItemsTwoQuery = $ODBC->query("SELECT count(1) as totalSolds FROM LogSolds WHERE data > '{$timeTwoBegin}' AND data < '{$timeTwoEnd}'");
-            $this->findSoldsItemsTwo = odbc_fetch_object($this->findSoldsItemsTwoQuery);
+            $this->findSoldsItemsOneQuery = $ODBC->query("SELECT count(1) as totalSolds FROM [ldShopV3].[dbo].[LogSolds] WHERE data > '{$timeOneBegin}' AND data < '{$timeOneEnd}'");
+            $this->findSoldsItemsOne = mssql_fetch_object($this->findSoldsItemsOneQuery);
+            $this->findSoldsItemsTwoQuery = $ODBC->query("SELECT count(1) as totalSolds FROM [ldShopV3].[dbo].[LogSolds] WHERE data > '{$timeTwoBegin}' AND data < '{$timeTwoEnd}'");
+            $this->findSoldsItemsTwo = mssql_fetch_object($this->findSoldsItemsTwoQuery);
             
-            $this->findSoldsKitsOneQuery = $ODBC->query("SELECT count(1) as totalSolds FROM LogSoldsKits WHERE data > '{$timeOneBegin}' AND data < '{$timeOneEnd}'");
-            $this->findSoldsKitsOne = odbc_fetch_object($this->findSoldsKitsOneQuery);
-            $this->findSoldsKitsTwoQuery = $ODBC->query("SELECT count(1) as totalSolds FROM LogSoldsKits WHERE data > '{$timeTwoBegin}' AND data < '{$timeTwoEnd}'");
-            $this->findSoldsKitsTwo = odbc_fetch_object($this->findSoldsKitsTwoQuery);
+            $this->findSoldsKitsOneQuery = $ODBC->query("SELECT count(1) as totalSolds FROM [ldShopV3].[dbo].[LogSoldsKits] WHERE data > '{$timeOneBegin}' AND data < '{$timeOneEnd}'");
+            $this->findSoldsKitsOne = mssql_fetch_object($this->findSoldsKitsOneQuery);
+            $this->findSoldsKitsTwoQuery = $ODBC->query("SELECT count(1) as totalSolds FROM [ldShopV3].[dbo].[LogSoldsKits] WHERE data > '{$timeTwoBegin}' AND data < '{$timeTwoEnd}'");
+            $this->findSoldsKitsTwo = mssql_fetch_object($this->findSoldsKitsTwoQuery);
             
             $this->Results_Reports .= "<div class=\"quadros\">Gerando relatório entre as datas: <strong>".$months_one."/".$year_one."</strong> e <strong>".$months_two."/".$year_two."</strong><br /><br />";
 			$this->Results_Reports .= "Atenção, esse relatório é uma estimativa. Não garantimos total precisão.<br /><br />";

@@ -16,14 +16,14 @@ if ( class_exists( "LogsKits" ) == false ) {
 		private function GetNumberBuys()
 		{
 			global $tpl, $ODBC;
-			$findTotalBuysQuery = $ODBC->query("SELECT count(1) as countSolds FROM LogSoldsKits");
-			$findTotalBuys = odbc_fetch_object($findTotalBuysQuery);
+			$findTotalBuysQuery = $ODBC->query("SELECT count(1) as countSolds FROM [ldShopV3].[dbo].[LogSoldsKits]");
+			$findTotalBuys = mssql_fetch_object($findTotalBuysQuery);
 			$tpl->set("TOTAL_BUYS_SYSTEM",(int)$findTotalBuys->countSolds);
 		}
         private function Delete_Log()
         {
             global $ODBC;
-            $ODBC->query("DELETE FROM LogSoldsKits WHERE Number = ". (int) $_GET['id'] );
+            $ODBC->query("DELETE FROM [ldShopV3].[dbo].[LogSoldsKits] WHERE Number = ". (int) $_GET['id'] );
             print("<script>alert('Log deletado com sucesso!');</script>");
         }
         private function Search_Buys()
@@ -32,20 +32,20 @@ if ( class_exists( "LogsKits" ) == false ) {
             $lasts = ($_POST['lasts'] < 1 ? 1 : $_POST['lasts']);
             $login = $_POST['login'];
             if(empty($login) == false) $query_p = "WHERE login='". $login ."'";                                               
-            $findKitsSoldsQ = $ODBC->query("SELECT TOP ". $lasts ." * FROM LogSoldsKits {$query_p} ORDER BY Number DESC"); 
-            while($findKitsSolds = odbc_fetch_object($findKitsSoldsQ))
+            $findKitsSoldsQ = $ODBC->query("SELECT TOP ". $lasts ." * FROM [ldShopV3].[dbo].[LogSoldsKits] {$query_p} ORDER BY Number DESC"); 
+            while($findKitsSolds = mssql_fetch_object($findKitsSoldsQ))
             {   
-                $findKitDetailsQuery = $ODBC->query("SELECT * FROM Kits WHERE Number = ". $findKitsSolds->kitNumber);
-                $findKitDetails = odbc_fetch_object($findKitDetailsQuery); 
+                $findKitDetailsQuery = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[Kits] WHERE Number = ". $findKitsSolds->kitNumber);
+                $findKitDetails = mssql_fetch_object($findKitDetailsQuery); 
                 $this->tmp_box_list .= "<div class=\"quadros\">Id Interno: <strong>{$findKitsSolds->Number}</strong> - <a href=\"?cmd=Logs::[KitsBuys]&DeleteLog=true&id={$findKitsSolds->Number}\">Deletar log</a><br />\nNome do Kit: <strong>{$findKitDetails->kitName}</strong><br />\nLogin: <strong>{$findKitsSolds->login}</strong><br />\nPre&ccedil;o pago: <strong>{$findKitsSolds->price}</strong> ".GOLDNAME."<br />\nComprado em: <strong>". date("d/m/Y g:i a", $findKitsSolds->data) ."</strong><br />\n<strong>Produtos que est&atilde;o incluidos no kit:</strong> ";
-                $FindSoldsDetailsQuery = $ODBC->query("SELECT * FROM LogSoldsKitsDetails WHERE NumberSoldKit = ". $findKitsSolds->Number ." AND login = '". $_SESSION['Login'] ."'");
-                while($FindSoldsDetails = odbc_fetch_object($FindSoldsDetailsQuery))
+                $FindSoldsDetailsQuery = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[LogSoldsKitsDetails] WHERE NumberSoldKit = ". $findKitsSolds->Number ." AND login = '". $_SESSION['Login'] ."'");
+                while($FindSoldsDetails = mssql_fetch_object($FindSoldsDetailsQuery))
                 {                                             
-                    $FindSoldsQuery = $ODBC->query("SELECT * FROM LogSolds WHERE login = '". $_SESSION['Login'] ."' AND type='kit' AND serial='{$FindSoldsDetails->itemSerial}'");
-                    $FindSolds = odbc_fetch_object($FindSoldsQuery);
+                    $FindSoldsQuery = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[LogSolds] WHERE login = '". $_SESSION['Login'] ."' AND type='kit' AND serial='{$FindSoldsDetails->itemSerial}'");
+                    $FindSolds = mssql_fetch_object($FindSoldsQuery);
                     $IDI++;                                                       
-                    $FindItemDetailsQuery = $ODBC->query("SELECT NAME,EXE,photoItem,photoItemAnc,JH,RF FROM Items WHERE Number = '". $FindSoldsDetails->itemId ."'");
-                    $FindItemDetails = odbc_fetch_object($FindItemDetailsQuery); 
+                    $FindItemDetailsQuery = $ODBC->query("SELECT NAME,EXE,photoItem,photoItemAnc,JH,RF FROM [ldShopV3].[dbo].[Items] WHERE Number = '". $FindSoldsDetails->itemId ."'");
+                    $FindItemDetails = mssql_fetch_object($FindItemDetailsQuery); 
                     $LD_History->GetNameOptions($FindItemDetails->EXE);                 
                     $LD_History->GetNameOptionJH($FindSolds->jh, $FindItemDetails->JH);
                     $LD_History->GetNameOptionRefine($FindSolds->refine, $FindItemDetails->RF);

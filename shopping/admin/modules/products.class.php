@@ -54,15 +54,15 @@ if ( class_exists( "products" ) == false ) {
         private function loadItens()
         {
             global $ODBC;
-            $memoryItemsQuery = $ODBC->query("SELECT Number, NAME, insertShop FROM Items ORDER BY NAME");
-            while($memoryItems = odbc_fetch_object($memoryItemsQuery))
+            $memoryItemsQuery = $ODBC->query("SELECT Number, NAME, insertShop FROM [ldShopV3].[dbo].[Items] ORDER BY NAME");
+            while($memoryItems = mssql_fetch_object($memoryItemsQuery))
                 $this->memoryItems[] = $memoryItems;
         }
         private function loadKits()
         {
             global $ODBC;
-            $memoryKitsQuery = $ODBC->query("SELECT Number, kitName FROM Kits ORDER BY kitName");
-            while($memoryKits = odbc_fetch_object($memoryKitsQuery))
+            $memoryKitsQuery = $ODBC->query("SELECT Number, kitName FROM [ldShopV3].[dbo].[Kits] ORDER BY kitName");
+            while($memoryKits = mssql_fetch_object($memoryKitsQuery))
                 $this->memoryKits[] = $memoryKits;
         }
         private function loadOptionsExeNames($type)
@@ -150,11 +150,11 @@ if ( class_exists( "products" ) == false ) {
             global $ODBC;
             if(is_numeric($number) == false) exit("Erro: N&uacute;mero inv&aacute;lido");             
             
-            $findDetailsItemQuery = $ODBC->query("SELECT * FROM Items WHERE Number = '{$number}'");    
-            $findDetailsItem = odbc_fetch_object($findDetailsItemQuery);
+            $findDetailsItemQuery = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[Items] WHERE Number = '{$number}'");    
+            $findDetailsItem = mssql_fetch_object($findDetailsItemQuery);
             
-            $findCategoriesQuery = $ODBC->query("SELECT Nombre FROM ItemsCategorias");    
-            while($findCategories = odbc_fetch_object($findCategoriesQuery))
+            $findCategoriesQuery = $ODBC->query("SELECT Nombre FROM [ldShopV3].[dbo].[ItemsCategorias]");    
+            while($findCategories = mssql_fetch_object($findCategoriesQuery))
                 $selectTagCategoria .= "<option value=\"{$findCategories->Nombre}\" ". ($findCategories->Nombre == $findDetailsItem->CATEGORIA ? "selected=\"selected\"":"") .">{$findCategories->Nombre}</option>";    
                                                                        
             $selectTagLevel .= "<option value=\"SN\" ". ($findDetailsItem->LVL == "SN" ? "selected=\"selected\"":"") .">N&atilde;o tem</option>";     
@@ -189,8 +189,8 @@ if ( class_exists( "products" ) == false ) {
             $selectTagExc .= "<option value=\"6\" ". ($findDetailsItem->EXE == 6 ? "selected=\"selected\"":"") .">Pendants (Col&aacute;res)</option>";
             $selectTagExc .= "<option value=\"7\" ". ($findDetailsItem->EXE == 7 ? "selected=\"selected\"":"") .">Wings S4 (Asas Season 4)</option>";
             
-            $findDetailsAncQuery = $ODBC->query("SELECT * FROM ItemsSetItems ORDER BY Nombre");
-            while($findDetailsAnc = odbc_fetch_object($findDetailsAncQuery))
+            $findDetailsAncQuery = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[ItemsSetItems] ORDER BY Nombre");
+            while($findDetailsAnc = mssql_fetch_object($findDetailsAncQuery))
                 $selectTagAnc .= "<option value=\"{$findDetailsAnc->Nombre}\" ". ($findDetailsItem->SetItem1 == $findDetailsAnc->Nombre ? "selected=\"selected\"":"") .">{$findDetailsAnc->Nombre}</option>";    
             
             echo "<form action=\"\" method=\"POST\" id=\"manager\" name=\"manager\">";                      
@@ -320,7 +320,7 @@ if ( class_exists( "products" ) == false ) {
             /*
                 @verificações? Nem sei ainda...
             */
-            $ODBC->query("UPDATE Items SET 
+            $ODBC->query("UPDATE [ldShopV3].[dbo].[Items] SET 
                             NAME = '{$this->name}',
                             TP = {$this->tp},
                             ID = {$this->id}, 
@@ -379,8 +379,8 @@ if ( class_exists( "products" ) == false ) {
         private function loadFormIncludeProductFrom()
         {
             global $ODBC;
-            $findCategoriesQuery = $ODBC->query("SELECT Nombre FROM ItemsCategorias");    
-            while($findCategories = odbc_fetch_object($findCategoriesQuery))
+            $findCategoriesQuery = $ODBC->query("SELECT Nombre FROM [ldShopV3].[dbo].[ItemsCategorias]");    
+            while($findCategories = mssql_fetch_object($findCategoriesQuery))
                 $selectTagCategoria .= "<option value=\"{$findCategories->Nombre}\">{$findCategories->Nombre}</option>";    
                                                                        
             $selectTagLevel .= "<option value=\"SN\">N&atilde;o tem</option>";     
@@ -415,8 +415,8 @@ if ( class_exists( "products" ) == false ) {
             $selectTagExc .= "<option value=\"6\">Pendants (Col&aacute;res)</option>";
             $selectTagExc .= "<option value=\"7\">Wings S4 (Asas Season 4)</option>";
             
-            $findDetailsAncQuery = $ODBC->query("SELECT * FROM ItemsSetItems ORDER BY Nombre");
-            while($findDetailsAnc = odbc_fetch_object($findDetailsAncQuery))
+            $findDetailsAncQuery = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[ItemsSetItems] ORDER BY Nombre");
+            while($findDetailsAnc = mssql_fetch_object($findDetailsAncQuery))
                 $selectTagAnc .= "<option value=\"{$findDetailsAnc->Nombre}\">{$findDetailsAnc->Nombre}</option>";    
             
             echo "<form action=\"\" method=\"POST\" id=\"manager\" name=\"manager\">";                      
@@ -544,66 +544,66 @@ if ( class_exists( "products" ) == false ) {
             
             $this->Number       = (string)(strlen($this->tp) == 2 ? $this->tp : "0".$this->tp).(strlen($this->id) == 3 ? $this->id : (strlen($this->id) == 2 ? "0".$this->id : (strlen($this->id) == 1 ? "00".$this->id : ""))).(strlen((int)$_POST['lvl']) == 2 ? (int)$_POST['lvl'] : "0".(int)$_POST['lvl']);
                 
-            $searchProductQ = $ODBC->query("SELECT 1 as Result FROM Items WHERE Number = '{$this->Number}'");
-            $searchProduct = odbc_fetch_array($searchProductQ);
+            $searchProductQ = $ODBC->query("SELECT 1 as Result FROM [ldShopV3].[dbo].[Items] WHERE Number = '{$this->Number}'");
+            $searchProduct = mssql_fetch_array($searchProductQ);
             if($searchProduct['Result'] == "1") exit("<ul><li>Erro, esse produto j&aacute; foi cadastrado.</li></ul>");                            
             
-            $ODBC->query("INSERT INTO Items 
-                    (`Number`,
-                    `TP`,
-                    `ID`,
-                    `NAME`,
-                    `CATEGORIA`,
-                    `X`,
-                    `Y`,
-                    `Z`,
-                    `DUR`,
-                    `LVL`,
-                    `OP`,
-                    `LK`,
-                    `SK`,
-                    `ANC`,
-                    `EXE`,
-                    `RF`,
-                    `JH`,
-                    `Socket`,
-                    `SET`,
-                    `SetItem1`,
-                    `SetItem2`,
-                    `price`,
-                    `priceLevel`,
-                    `priceOption`,
-                    `priceSkill`,
-                    `priceLuck`,
-                    `priceAncient`,
-                    `priceJh`,
-                    `priceRefine`,
-                    `priceSocket`,
-                    `priceOptExc`,
-                    `maxOptExcSel`,
-                    `ofert`,
-                    `solds`,
-                    `insertShop`,
-                    `C_0`,
-                    `C_1`,
-                    `C_2`,
-                    `C_16`,
-                    `C_17`,
-                    `C_18`,
-                    `C_32`,
-                    `C_33`,
-                    `C_34`,
-                    `C_48`,
-                    `C_49`,
-                    `C_64`,
-                    `C_65`,
-                    `C_80`,
-                    `C_81`,
-                    `C_82`,
-                    `C_96`,
-                    `C_98`,
-                    `photoItem`,
-                    `photoItemAnc`
+            $ODBC->query("INSERT INTO [ldShopV3].[dbo].[Items] 
+                    ([Number],
+                    [TP],
+                    [ID],
+                    [NAME],
+                    [CATEGORIA],
+                    [X],
+                    [Y],
+                    [Z],
+                    [DUR],
+                    [LVL],
+                    [OP],
+                    [LK],
+                    [SK],
+                    [ANC],
+                    [EXE],
+                    [RF],
+                    [JH],
+                    [Socket],
+                    [SET],
+                    [SetItem1],
+                    [SetItem2],
+                    [price],
+                    [priceLevel],
+                    [priceOption],
+                    [priceSkill],
+                    [priceLuck],
+                    [priceAncient],
+                    [priceJh],
+                    [priceRefine],
+                    [priceSocket],
+                    [priceOptExc],
+                    [maxOptExcSel],
+                    [ofert],
+                    [solds],
+                    [insertShop],
+                    [C_0],
+                    [C_1],
+                    [C_2],
+                    [C_16],
+                    [C_17],
+                    [C_18],
+                    [C_32],
+                    [C_33],
+                    [C_34],
+                    [C_48],
+                    [C_49],
+                    [C_64],
+                    [C_65],
+                    [C_80],
+                    [C_81],
+                    [C_82],
+                    [C_96],
+                    [C_98],
+                    [photoItem],
+                    [photoItemAnc]
                     )
                     VALUES
                     (    
@@ -681,7 +681,7 @@ if ( class_exists( "products" ) == false ) {
         private function loadFormDeleteProductFrom()
         {
             global $ODBC;
-            if($ODBC->query("DELETE FROM Items WHERE Number='{$_GET['number']}'") == false)
+            if($ODBC->query("DELETE FROM [ldShopV3].[dbo].[Items] WHERE Number='{$_GET['number']}'") == false)
                 echo "<ul><li>Erro ao deletar o item.</li></ul>";
             else
                 echo "<ul><li>Item deletado com sucesso!</li></ul>";   
@@ -705,11 +705,11 @@ if ( class_exists( "products" ) == false ) {
             $solds = (int) $_POST['solds'];
             if(empty($_POST['kitName']) == true) exit("<ul><li>Preencha o nome do kit.</li></ul>");
             
-            $findLastNumberQuery = $ODBC->query("SELECT Number FROM Kits ORDER BY Number DESC");
-            $findLastNumber = odbc_fetch_object($findLastNumberQuery);
+            $findLastNumberQuery = $ODBC->query("SELECT Number FROM [ldShopV3].[dbo].[Kits] ORDER BY Number DESC");
+            $findLastNumber = mssql_fetch_object($findLastNumberQuery);
             $this->lastKitNumber = (int)$findLastNumber->Number + 1;
             
-            if($ODBC->query("INSERT INTO Kits (`Number`, `kitName`, `priceFix`, `solds`, `active`) VALUES ({$this->lastKitNumber}, '{$_POST['kitName']}', {$priceFix}, {$solds}, {$active});") == true)
+            if($ODBC->query("INSERT INTO [ldShopV3].[dbo].[Kits] ([Number], [kitName], [priceFix], [solds], [active]) VALUES ({$this->lastKitNumber}, '{$_POST['kitName']}', {$priceFix}, {$solds}, {$active});") == true)
                 echo "<ul><li>Kit <strong>{$_POST['kitName']}</strong> cadastrado com sucesso.</li></ul>";    
             else
                 echo "<ul><li>Erro ao cadastrar Kit.</li></ul>";    
@@ -738,8 +738,8 @@ if ( class_exists( "products" ) == false ) {
             }
             else
             {
-                $findKitDetailsQuery = $ODBC->query("SELECT kitName FROM Kits WHERE Number = ". $number);
-                $findKitDetails = odbc_fetch_object($findKitDetailsQuery);
+                $findKitDetailsQuery = $ODBC->query("SELECT kitName FROM [ldShopV3].[dbo].[Kits] WHERE Number = ". $number);
+                $findKitDetails = mssql_fetch_object($findKitDetailsQuery);
                 
                 switch($_GET['action'])
                 {
@@ -754,12 +754,12 @@ if ( class_exists( "products" ) == false ) {
                         echo "</select>";                          
                         break; 
                     case "includeItemForm":
-                        $checkItemIncludeQuery = $ODBC->query("SELECT itemNumber FROM KitsItemsDetails WHERE kitNumber = {$number} AND itemNumber='{$_GET['itemNumber']}'");
-                        $checkItemInclude = odbc_fetch_object($checkItemIncludeQuery);
+                        $checkItemIncludeQuery = $ODBC->query("SELECT itemNumber FROM [ldShopV3].[dbo].[KitsItemsDetails] WHERE kitNumber = {$number} AND itemNumber='{$_GET['itemNumber']}'");
+                        $checkItemInclude = mssql_fetch_object($checkItemIncludeQuery);
                         if($checkItemInclude->itemNumber == $_GET['itemNumber']) exit("<ul><li>Erro, esse item j&aacute; foi cadastrado nesse kit.</li></ul>");
                         
-                        $findItemDetailsQuery = $ODBC->query("SELECT * FROM Items WHERE Number = '{$_GET['itemNumber']}'");
-                        $findItemDetails = odbc_fetch_object($findItemDetailsQuery);
+                        $findItemDetailsQuery = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[Items] WHERE Number = '{$_GET['itemNumber']}'");
+                        $findItemDetails = mssql_fetch_object($findItemDetailsQuery);
                         
                         $this->loadOptionsExeNames($findItemDetails->EXE);     
                                                                                                
@@ -798,8 +798,8 @@ if ( class_exists( "products" ) == false ) {
                         else
                         {
                             $selectTagJh .= "<option value='00'>Nenhuma</option>";
-                            $SelectOptionsJhQ = $ODBC->query("SELECT * FROM ItemsJewelOfHarmony WHERE TP = '{$findItemDetails->JH}' ORDER BY [Number]");
-                            while($SelectOptionsJh = odbc_fetch_array($SelectOptionsJhQ))
+                            $SelectOptionsJhQ = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[ItemsJewelOfHarmony] WHERE TP = '{$findItemDetails->JH}' ORDER BY [Number]");
+                            while($SelectOptionsJh = mssql_fetch_array($SelectOptionsJhQ))
                             {
                                 if(substr($SelectOptionsJh['NM'],0 ,8) == "NONE JoH") continue;  
                                 for($iJh = 0; $iJh < 15; $iJh++)
@@ -816,8 +816,8 @@ if ( class_exists( "products" ) == false ) {
                             $selectTagRefine .= "<option value=\"0\">Nenhuma</option>";   
                         else
                         {
-                            $SelectOptionRefineQ = $ODBC->query("SELECT prefx1, prefx2 FROM ItemsRefinery WHERE ID={$findItemDetails->RF}");
-                            $SelectOptionRefine = odbc_fetch_object($SelectOptionRefineQ);  
+                            $SelectOptionRefineQ = $ODBC->query("SELECT prefx1, prefx2 FROM [ldShopV3].[dbo].[ItemsRefinery] WHERE ID={$findItemDetails->RF}");
+                            $SelectOptionRefine = mssql_fetch_object($SelectOptionRefineQ);  
                             $selectTagRefine .= "<option value=\"0\">Nenhuma</option><option value=\"1\">{$SelectOptionRefine->prefx1}, {$SelectOptionRefine->prefx2}";    
                         }
                         require("../modules/sockets.lib.php");
@@ -959,8 +959,8 @@ if ( class_exists( "products" ) == false ) {
                     
                                 /*for($iSocketCount = 0, $iSocketIncrement = count($typesSockets); $iSocketCount < $iSocketIncrement; $iSocketCount++)
                                 {
-                                    $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, ID, S1, S2, S3, S4, S5 FROM ItemsSocket WHERE TP = ".$typesSockets[$iSocketCount]);
-                                    while($SelectOptionsSocket = odbc_fetch_array($SelectOptionsSocketQ))
+                                    $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, ID, S1, S2, S3, S4, S5 FROM [ldShopV3].[dbo].[ItemsSocket] WHERE TP = ".$typesSockets[$iSocketCount]);
+                                    while($SelectOptionsSocket = mssql_fetch_array($SelectOptionsSocketQ))
                                     {                                                                      
                                         $this->selectOptionsSocketItemTmp[0] .= "<option value=\"". ($SelectOptionsSocket['ID']) ."\">{$SelectOptionsSocket['ST']} ({$SelectOptionsSocket['NM']} + {$SelectOptionsSocket['S1']})</option>\n";
                                         $this->selectOptionsSocketItemTmp[1] .= "<option value=\"". ($SelectOptionsSocket['ID']+50) ."\">{$SelectOptionsSocket['ST']} ({$SelectOptionsSocket['NM']} + {$SelectOptionsSocket['S2']})</option>\n";
@@ -1032,8 +1032,8 @@ if ( class_exists( "products" ) == false ) {
                         $fixSocket4 =   (int)$_POST['fixSocket4'];
                         $fixSocket5 =   (int)$_POST['fixSocket5'];
                         
-                        if($ODBC->query("INSERT INTO KitsItemsDetails 
-                                        (`kitNumber`,`itemNumber`,`fixLVL`,`fixOP`,`fixLuck`,`fixSkill`,`fixANC`,`fixOpEx1`,`fixOpEx2`,`fixOpEx3`,`fixOpEx4`,`fixOpEx5`,`fixOpEx6`,`fixJH`,`fixRefine`,`fixSocket1`,`fixSocket2`,`fixSocket3`,`fixSocket4`,`fixSocket5`) 
+                        if($ODBC->query("INSERT INTO [ldShopV3].[dbo].[KitsItemsDetails] 
+                                        ([kitNumber],[itemNumber],[fixLVL],[fixOP],[fixLuck],[fixSkill],[fixANC],[fixOpEx1],[fixOpEx2],[fixOpEx3],[fixOpEx4],[fixOpEx5],[fixOpEx6],[fixJH],[fixRefine],[fixSocket1],[fixSocket2],[fixSocket3],[fixSocket4],[fixSocket5]) 
                                         VALUES ({$number}, '{$itemNumber}', {$fixLevel}, {$fixOP}, {$fixLuck}, {$fixSkill}, {$fixANC}, {$fixOpEx1}, {$fixOpEx2}, {$fixOpEx3}, {$fixOpEx4}, {$fixOpEx5}, {$fixOpEx6}, '{$fixJH}', {$fixRefine}, {$fixSocket1}, {$fixSocket2}, {$fixSocket3}, {$fixSocket4}, {$fixSocket5});
                                      ") == false) echo "<ul><li>Erro ao adicionar item. Favor tentar novamente.</li></ul>";
                         else echo "<ul><li>Item adicionado com sucesso!.</li></ul>";
@@ -1041,22 +1041,22 @@ if ( class_exists( "products" ) == false ) {
                     case "alterItemSelect":
                         echo "Selecione o item que deseja altera em <strong>{$findKitDetails->kitName}</strong>";
                         echo "<select multiple style=\"width:500px; height:150px\" onchange=\"javascript: Verify('?AjaxFunctions=true&Function=managerProducts&module=alterThisKit&action=alterItemForm&number={$number}&itemNumber='+this.options[this.selectedIndex].value, 'resultItemsAjaxKitsResult', 'get');\">";
-                        $findItensInKitQuery = $ODBC->query("SELECT itemNumber FROM KitsItemsDetails WHERE kitNumber = ". $number);
-                        while($findItensInKit = odbc_fetch_object($findItensInKitQuery))
+                        $findItensInKitQuery = $ODBC->query("SELECT itemNumber FROM [ldShopV3].[dbo].[KitsItemsDetails] WHERE kitNumber = ". $number);
+                        while($findItensInKit = mssql_fetch_object($findItensInKitQuery))
                         {
-                                $findItemKitDetailsQuery = $ODBC->query("SELECT NAME FROM Items WHERE Number='{$findItensInKit->itemNumber}'");
-                                $findItemKitDetails = odbc_fetch_object($findItemKitDetailsQuery);
+                                $findItemKitDetailsQuery = $ODBC->query("SELECT NAME FROM [ldShopV3].[dbo].[Items] WHERE Number='{$findItensInKit->itemNumber}'");
+                                $findItemKitDetails = mssql_fetch_object($findItemKitDetailsQuery);
                                 echo "<option value=\"{$findItensInKit->itemNumber}\">{$findItemKitDetails->NAME}</option>";    
                         }   
                         echo "</select>";                          
                         break;
                     case "alterItemForm":
-                        $checkItemDetailsKitQuery = $ODBC->query("SELECT * FROM KitsItemsDetails WHERE kitNumber = {$number} AND itemNumber='{$_GET['itemNumber']}'");
-                        $checkItemDetailsKit = odbc_fetch_object($checkItemDetailsKitQuery);
+                        $checkItemDetailsKitQuery = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[KitsItemsDetails] WHERE kitNumber = {$number} AND itemNumber='{$_GET['itemNumber']}'");
+                        $checkItemDetailsKit = mssql_fetch_object($checkItemDetailsKitQuery);
                         if($checkItemDetailsKit->itemNumber != $_GET['itemNumber']) exit("<ul><li>Erro, esse item n&aatilde; foi cadastrado nesse kit.</li></ul>");
                         
-                        $findItemDetailsQuery = $ODBC->query("SELECT * FROM Items WHERE Number = '{$_GET['itemNumber']}'");
-                        $findItemDetails = odbc_fetch_object($findItemDetailsQuery);
+                        $findItemDetailsQuery = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[Items] WHERE Number = '{$_GET['itemNumber']}'");
+                        $findItemDetails = mssql_fetch_object($findItemDetailsQuery);
                                                      
                         $this->loadOptionsExeNames($findItemDetails->EXE);     
                         
@@ -1095,8 +1095,8 @@ if ( class_exists( "products" ) == false ) {
                         else
                         {
                             $selectTagJh .= "<option value='00'>Nenhuma</option>";
-                            $SelectOptionsJhQ = $ODBC->query("SELECT * FROM ItemsJewelOfHarmony WHERE TP = '{$findItemDetails->JH}' ORDER BY [Number]");
-                            while($SelectOptionsJh = odbc_fetch_array($SelectOptionsJhQ))
+                            $SelectOptionsJhQ = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[ItemsJewelOfHarmony] WHERE TP = '{$findItemDetails->JH}' ORDER BY [Number]");
+                            while($SelectOptionsJh = mssql_fetch_array($SelectOptionsJhQ))
                             {
                                 if(substr($SelectOptionsJh['NM'],0 ,8) == "NONE JoH") continue;  
                                 for($iJh = 0; $iJh < 15; $iJh++)
@@ -1113,8 +1113,8 @@ if ( class_exists( "products" ) == false ) {
                             $selectTagRefine .= "<option value=\"0\">Nenhuma</option>";   
                         else
                         {
-                            $SelectOptionRefineQ = $ODBC->query("SELECT prefx1, prefx2 FROM ItemsRefinery WHERE ID={$findItemDetails->RF}");
-                            $SelectOptionRefine = odbc_fetch_object($SelectOptionRefineQ);  
+                            $SelectOptionRefineQ = $ODBC->query("SELECT prefx1, prefx2 FROM [ldShopV3].[dbo].[ItemsRefinery] WHERE ID={$findItemDetails->RF}");
+                            $SelectOptionRefine = mssql_fetch_object($SelectOptionRefineQ);  
                             $selectTagRefine .= "<option value=\"0\">Nenhuma</option><option value=\"1\" ". ($checkItemDetailsKit->fixRefine == "1" ? "selected = \"selected\"":"") .">{$SelectOptionRefine->prefx1}, {$SelectOptionRefine->prefx2}";    
                         }
                         
@@ -1257,8 +1257,8 @@ if ( class_exists( "products" ) == false ) {
                     
                                 /*for($iSocketCount = 0, $iSocketIncrement = count($typesSockets); $iSocketCount < $iSocketIncrement; $iSocketCount++)
                                 {
-                                    $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, ID, S1, S2, S3, S4, S5 FROM ItemsSocket WHERE TP = ".$typesSockets[$iSocketCount]);
-                                    while($SelectOptionsSocket = odbc_fetch_array($SelectOptionsSocketQ))
+                                    $SelectOptionsSocketQ = $ODBC->query("SELECT ST, NM, ID, S1, S2, S3, S4, S5 FROM [ldShopV3].[dbo].[ItemsSocket] WHERE TP = ".$typesSockets[$iSocketCount]);
+                                    while($SelectOptionsSocket = mssql_fetch_array($SelectOptionsSocketQ))
                                     {                                                                      
                                         $this->selectOptionsSocketItemTmp[0] .= "<option value=\"". ($SelectOptionsSocket['ID']) ."\" ". ($checkItemDetailsKit->fixSocket1 == ($SelectOptionsSocket['ID']) ? "selected = \"selected\"":"") .">{$SelectOptionsSocket['ST']} ({$SelectOptionsSocket['NM']} + {$SelectOptionsSocket['S1']})</option>\n";
                                         $this->selectOptionsSocketItemTmp[1] .= "<option value=\"". ($SelectOptionsSocket['ID']+50) ."\" ". ($checkItemDetailsKit->fixSocket2 == ($SelectOptionsSocket['ID']+50) ? "selected = \"selected\"":"") .">{$SelectOptionsSocket['ST']} ({$SelectOptionsSocket['NM']} + {$SelectOptionsSocket['S2']})</option>\n";
@@ -1330,37 +1330,37 @@ if ( class_exists( "products" ) == false ) {
                         $fixSocket4 =   (int)$_POST['fixSocket4'];
                         $fixSocket5 =   (int)$_POST['fixSocket5'];
                         
-                        if($ODBC->query("UPDATE KitsItemsDetails SET              
-                                        `fixLVL` = {$fixLevel},
-                                        `fixOP` = {$fixOP},
-                                        `fixLuck` = {$fixLuck},
-                                        `fixSkill` = {$fixSkill},
-                                        `fixANC` = {$fixANC},
-                                        `fixOpEx1` = {$fixOpEx1},
-                                        `fixOpEx2` = {$fixOpEx2},
-                                        `fixOpEx3` = {$fixOpEx3},
-                                        `fixOpEx4` = {$fixOpEx4},
-                                        `fixOpEx5` = {$fixOpEx5},
-                                        `fixOpEx6` = {$fixOpEx6},
-                                        `fixJH` = '{$fixJH}',
-                                        `fixRefine` = {$fixRefine},
-                                        `fixSocket1` = {$fixSocket1},
-                                        `fixSocket2` = {$fixSocket2},
-                                        `fixSocket3` = {$fixSocket3},
-                                        `fixSocket4` = {$fixSocket4},
-                                        `fixSocket5` = {$fixSocket5}
-                                        WHERE `kitNumber` = {$number} AND `itemNumber` = '{$itemNumber}'
+                        if($ODBC->query("UPDATE [ldShopV3].[dbo].[KitsItemsDetails] SET              
+                                        [fixLVL] = {$fixLevel},
+                                        [fixOP] = {$fixOP},
+                                        [fixLuck] = {$fixLuck},
+                                        [fixSkill] = {$fixSkill},
+                                        [fixANC] = {$fixANC},
+                                        [fixOpEx1] = {$fixOpEx1},
+                                        [fixOpEx2] = {$fixOpEx2},
+                                        [fixOpEx3] = {$fixOpEx3},
+                                        [fixOpEx4] = {$fixOpEx4},
+                                        [fixOpEx5] = {$fixOpEx5},
+                                        [fixOpEx6] = {$fixOpEx6},
+                                        [fixJH] = '{$fixJH}',
+                                        [fixRefine] = {$fixRefine},
+                                        [fixSocket1] = {$fixSocket1},
+                                        [fixSocket2] = {$fixSocket2},
+                                        [fixSocket3] = {$fixSocket3},
+                                        [fixSocket4] = {$fixSocket4},
+                                        [fixSocket5] = {$fixSocket5}
+                                        WHERE [kitNumber] = {$number} AND [itemNumber] = '{$itemNumber}'
                                      ") == false) echo "<ul><li>Erro ao alterar item. Favor tentar novamente.</li></ul>";
                         else echo "<ul><li>Item alterado com sucesso!</li></ul>";
                         break;
                     case "removeItemSelect":
                         echo "Selecione o item que deseja remover em <strong>{$findKitDetails->kitName}</strong>";
                         echo "<select multiple style=\"width:500px; height:150px\" id=\"productsList\">";
-                        $findItensInKitQuery = $ODBC->query("SELECT itemNumber FROM KitsItemsDetails WHERE kitNumber = ". $number);
-                        while($findItensInKit = odbc_fetch_object($findItensInKitQuery))
+                        $findItensInKitQuery = $ODBC->query("SELECT itemNumber FROM [ldShopV3].[dbo].[KitsItemsDetails] WHERE kitNumber = ". $number);
+                        while($findItensInKit = mssql_fetch_object($findItensInKitQuery))
                         {
-                                $findItemKitDetailsQuery = $ODBC->query("SELECT NAME FROM Items WHERE Number='{$findItensInKit->itemNumber}'");
-                                $findItemKitDetails = odbc_fetch_object($findItemKitDetailsQuery);
+                                $findItemKitDetailsQuery = $ODBC->query("SELECT NAME FROM [ldShopV3].[dbo].[Items] WHERE Number='{$findItensInKit->itemNumber}'");
+                                $findItemKitDetails = mssql_fetch_object($findItemKitDetailsQuery);
                                 echo "<option value=\"{$findItensInKit->itemNumber}\">{$findItemKitDetails->NAME}</option>";    
                         }   
                         echo "</select>";
@@ -1371,22 +1371,22 @@ if ( class_exists( "products" ) == false ) {
                         $number =       (int)$_GET['number'];
                         $itemNumber =   (string)$_GET['itemNumber'];  
                         
-                        if($ODBC->query("DELETE FROM KitsItemsDetails WHERE `kitNumber` = {$number} AND `itemNumber` = '{$itemNumber}'") == false) 
+                        if($ODBC->query("DELETE FROM [ldShopV3].[dbo].[KitsItemsDetails] WHERE [kitNumber] = {$number} AND [itemNumber] = '{$itemNumber}'") == false) 
                             echo "<ul><li>Erro ao remover item. Favor tentar novamente.</li></ul>";
                         else
                             echo "<ul><li>Item removido com sucesso!</li></ul>";
                         break;
                     case "activeDesactiveSolds":
-                        $findKitDetailsQuery = $ODBC->query("SELECT active FROM Kits WHERE Number = ". $number);
-                        $findKitDetails = odbc_fetch_object($findKitDetailsQuery);
+                        $findKitDetailsQuery = $ODBC->query("SELECT active FROM [ldShopV3].[dbo].[Kits] WHERE Number = ". $number);
+                        $findKitDetails = mssql_fetch_object($findKitDetailsQuery);
                         if($findKitDetails->active == 0)
                         {
-                            $ODBC->query("UPDATE Kits SET active = 1 WHERE Number = ". $number);
+                            $ODBC->query("UPDATE [ldShopV3].[dbo].[Kits] SET active = 1 WHERE Number = ". $number);
                             echo "<ul><li>As vendas desse kits foram <strong>ativadas</strong> nesse momento.</ul></li>";   
                         }
                         else
                         {
-                            $ODBC->query("UPDATE Kits SET active = 0 WHERE Number = ". $number);
+                            $ODBC->query("UPDATE [ldShopV3].[dbo].[Kits] SET active = 0 WHERE Number = ". $number);
                             echo "<ul><li>As vendas desse kits foram <strong>desativadas</strong> nesse momento.</ul></li>"; 
                         }
                         break;
@@ -1411,9 +1411,9 @@ if ( class_exists( "products" ) == false ) {
             global $ODBC;  
             if(is_numeric($_GET['number']) == false) echo "<ul><li>Erro, n&uacute;mero inv&aacute;lido</li></ul>"; 
             echo "<ul><li>Deletando itens do kit: ";
-            if($ODBC->query("DELETE FROM KitsItemsDetails WHERE kitNumber = ". $_GET['number']) == true) echo "ok.</li></ul>"; else echo "erro.</li></ul>";
+            if($ODBC->query("DELETE FROM [ldShopV3].[dbo].[KitsItemsDetails] WHERE kitNumber = ". $_GET['number']) == true) echo "ok.</li></ul>"; else echo "erro.</li></ul>";
             echo "<ul><li>Deletando kit:";
-            if($ODBC->query("DELETE FROM Kits WHERE Number = ". $_GET['number']) == true) echo "ok.</li></ul>"; else echo "erro.</li></ul>";  
+            if($ODBC->query("DELETE FROM [ldShopV3].[dbo].[Kits] WHERE Number = ". $_GET['number']) == true) echo "ok.</li></ul>"; else echo "erro.</li></ul>";  
         }
 	}
 }

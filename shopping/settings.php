@@ -14,13 +14,6 @@ define("USER_SQL", "sa");
 define("PWD_SQL", "microsoft");
 
 /*
-	@Conexão com o odbc;
-*/
-define("DNS_ODBC", "ldShopV3");
-define("USER_ODBC", "");
-define("PWD_ODBC", "");
-
-/*
 	@Codificação de items;
 	@Para versões velhas use: OLD
 	@Para versões novas use: NEW

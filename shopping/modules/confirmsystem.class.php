@@ -58,7 +58,7 @@ if ( class_exists( "ConfirmSystem" ) == false ) {
 				move_uploaded_file($this->file['tmp_name'], $TmpUploadName);
 			}
 			$this->ResponseTpl .= "<script type=\"text/javascript\"> document.getElementById('FormConfirm').style.display = 'none'; </script>";
-			$ODBC->query("INSERT INTO LogsPayments
+			$ODBC->query("INSERT INTO [ldShopV3].[dbo].[LogsPayments]
 							(login,golds,banco,nterminal,ntransferencia,agencia_acolhedora,nsequencia,ctr,caixa_eletronico,nenvelope,ndocumento,ncontrole,noperador,data,hora,pago_em,anexo,comentario,valor,status) VALUES
 							('". $_SESSION['Login'] ."', '". $this->golds ."', '". $this->bank ."', '". $this->nterminal ."', '". $this->ntransferencia ."', '". $this->agencia_acolhedora ."', '". $this->nsequencia ."', '". $this->ctr ."', '". $this->caixa_eletronico ."', '". $this->nenvelope ."', '". $this->ndocumento ."', '". $this->ncontrole ."', '". $this->noperador."', '". $this->data ."', '". $this->hora ."', '". $this->pago_em ."', '". $TmpUploadName  ."', '".base64_encode($this->comment)."', '". $this->valor ."', 1);");
 			$this->ResponseTpl .= "<div class=\"qdestaques\">Sua confirmação foi enviada com sucesso!<br/>Aguarde que nossa equipe confirme seu pagamento.<br/>Para ver o status da sua confirmação acesse o link: <a href='?cmd=HistorySystem'>Ver confirmações</a><br/>Obrigado.</div>";

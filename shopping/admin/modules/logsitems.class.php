@@ -16,14 +16,14 @@ if ( class_exists( "LogsItems" ) == false ) {
 		private function GetNumberBuys()
 		{
 			global $tpl, $ODBC;
-			$findTotalBuysQuery = $ODBC->query("SELECT count(1) as countSolds FROM LogSolds");
-			$findTotalBuys = odbc_fetch_object($findTotalBuysQuery);
+			$findTotalBuysQuery = $ODBC->query("SELECT count(1) as countSolds FROM [ldShopV3].[dbo].[LogSolds]");
+			$findTotalBuys = mssql_fetch_object($findTotalBuysQuery);
 			$tpl->set("TOTAL_BUYS_SYSTEM",(int)$findTotalBuys->countSolds);
 		}
         private function Delete_Log()
         {
             global $ODBC;
-            $ODBC->query("DELETE FROM LogSolds WHERE type='common' AND number = ". (int) $_GET['id'] );
+            $ODBC->query("DELETE FROM [ldShopV3].[dbo].[LogSolds] WHERE type='common' AND number = ". (int) $_GET['id'] );
             print("<script>alert('Log deletado com sucesso!');</script>");
         }
         private function Search_Buys()
@@ -32,12 +32,12 @@ if ( class_exists( "LogsItems" ) == false ) {
             $lasts = ($_POST['lasts'] < 1 ? 1 : $_POST['lasts']);
             $login = $_POST['login'];
             if(empty($login) == false) $query_p = "and login='". $login ."'";
-            $FindSoldsQuery = $ODBC->query("SELECT TOP ". $lasts ." * FROM LogSolds WHERE type='common' {$query_p} ORDER BY number DESC");
-            while($FindSolds = odbc_fetch_object($FindSoldsQuery))
+            $FindSoldsQuery = $ODBC->query("SELECT TOP ". $lasts ." * FROM [ldShopV3].[dbo].[LogSolds] WHERE type='common' {$query_p} ORDER BY number DESC");
+            while($FindSolds = mssql_fetch_object($FindSoldsQuery))
             {    
                 $IDI++;
-                $FindItemDetailsQuery = $ODBC->query("SELECT NAME,EXE,photoItem,photoItemAnc,JH,RF FROM Items WHERE Number = '". $FindSolds->itemNumber ."'");
-                $FindItemDetails = odbc_fetch_object($FindItemDetailsQuery); 
+                $FindItemDetailsQuery = $ODBC->query("SELECT NAME,EXE,photoItem,photoItemAnc,JH,RF FROM [ldShopV3].[dbo].[Items] WHERE Number = '". $FindSolds->itemNumber ."'");
+                $FindItemDetails = mssql_fetch_object($FindItemDetailsQuery); 
                 $LD_History->GetNameOptions($FindItemDetails->EXE);                 
                 $LD_History->GetNameOptionJH($FindSolds->jh, $FindItemDetails->JH);
                 $LD_History->GetNameOptionRefine($FindSolds->refine, $FindItemDetails->RF);

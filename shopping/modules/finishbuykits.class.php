@@ -13,13 +13,13 @@ if ( class_exists( "LD_FinishBuyKits" ) == false ) {
             $SQL = mssql_fetch_object($SQL_Q);
             if($SQL->ConnectStat <> 0) exit(Print_error("<ul><li>Voc&ecirc; deve estar offline do jogo para efetuar essa a&ccedil;&atilde;o!</li></ul>"));
             
-            $searchKitQ = $ODBC->query("SELECT priceFix FROM Kits WHERE active = 1 AND Number = ". $_GET['ProductID'] ); 
-            if(odbc_num_rows($searchKitQ) == 0) exit(Print_error("<script type=\"text/javascript\">alert(\"Erro kit n&atilde;o cadastrado.\"); window.location='?';</script>")); 
-            $searchItensKitQ = $ODBC->query("SELECT * FROM KitsItemsDetails WHERE kitNumber = ". $_GET['ProductID'] );
+            $searchKitQ = $ODBC->query("SELECT priceFix FROM [ldShopV3].[dbo].[Kits] WHERE active = 1 AND Number = ". $_GET['ProductID'] ); 
+            if(mssql_num_rows($searchKitQ) == 0) exit(Print_error("<script type=\"text/javascript\">alert(\"Erro kit n&atilde;o cadastrado.\"); window.location='?';</script>")); 
+            $searchItensKitQ = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[KitsItemsDetails] WHERE kitNumber = ". $_GET['ProductID'] );
             echo "<ul><li>Aguarde em quanto sua compra &eacute; processada.</li><br />";
                           
             //Inicio Função independente para cobrar o kit
-            $searchKit = odbc_fetch_object($searchKitQ);
+            $searchKit = mssql_fetch_object($searchKitQ);
             $SQL_Q = $this->query("SELECT ".GOLDCOLUMN." FROM ".GOLDTABLE." WHERE ".GOLDMEMBIDENT." = '". $_SESSION['Login'] ."'");
             $SQL_R = mssql_fetch_row($SQL_Q);
             if($SQL_R[0] < $searchKit->priceFix) exit(Print_error("<ul><li>Desculpe, essa compra n&atilde;o pode ser realizada, pois seu saldo de ".GOLDNAME." &eacute; insuficiente.</li></ul>"));
@@ -27,16 +27,16 @@ if ( class_exists( "LD_FinishBuyKits" ) == false ) {
             $SQL_R = mssql_fetch_object($SQL_Q);
             if((int)$SQL_R->rows == 0) exit(Print_error("<ul><li>Erro ao cobrar pelo kit.</li></ul>"));
             //Fim Função independente para cobrar o kit
-            $ODBC->query("UPDATE Kits SET solds=solds+1 WHERE Number=".$_GET['ProductID']);
-            $searchLastSoldNumberQ = $ODBC->query("SELECT max(Number) as Numb FROM LogSoldsKits");
-            $searchLastSoldNumber = odbc_fetch_object($searchLastSoldNumberQ);
+            $ODBC->query("UPDATE [ldShopV3].[dbo].[Kits] SET solds=solds+1 WHERE Number=".$_GET['ProductID']);
+            $searchLastSoldNumberQ = $ODBC->query("SELECT max(Number) as Numb FROM [ldShopV3].[dbo].[LogSoldsKits]");
+            $searchLastSoldNumber = mssql_fetch_object($searchLastSoldNumberQ);
             $searchLastSoldNumber->Numb = (int)$searchLastSoldNumber->Numb+1;
             
-            $ODBC->query("INSERT INTO LogSoldsKits (login,kitNumber,price,data) VALUES ('{$_SESSION['Login']}', {$_GET['ProductID']}, {$searchKit->priceFix}, '". time() ."')");   
+            $ODBC->query("INSERT INTO [ldShopV3].[dbo].[LogSoldsKits] (login,kitNumber,price,data) VALUES ('{$_SESSION['Login']}', {$_GET['ProductID']}, {$searchKit->priceFix}, '". time() ."')");   
             require("sockets.lib.php");
             //exit(var_dump($socketLib));
                         
-            while($searchItensKit = odbc_fetch_object($searchItensKitQ))
+            while($searchItensKit = mssql_fetch_object($searchItensKitQ))
             {
                 //var_dump($searchItensKit);
                 $LD_FinishBuy = new LD_FinishBuy($searchItensKit->itemNumber,
@@ -64,7 +64,7 @@ if ( class_exists( "LD_FinishBuyKits" ) == false ) {
                                                 $searchItensKit->fixSocket4,
                                                 $searchItensKit->fixSocket5,
                                                 true);
-                $ODBC->query("INSERT INTO LogSoldsKitsDetails (NumberSoldKit,login,itemId,itemSerial) VALUES ({$searchLastSoldNumber->Numb}, '{$_SESSION['Login']}', '{$searchItensKit->itemNumber}', '{$LD_Items->Item_Serial}')");   
+                $ODBC->query("INSERT INTO [ldShopV3].[dbo].[LogSoldsKitsDetails] (NumberSoldKit,login,itemId,itemSerial) VALUES ({$searchLastSoldNumber->Numb}, '{$_SESSION['Login']}', '{$searchItensKit->itemNumber}', '{$LD_Items->Item_Serial}')");   
                 if($LD_FinishBuy->delivered == true)
                     echo "<li>Item: <strong>{$LD_FinishBuy->NAME}</strong>, entregue.</li>";
                 else

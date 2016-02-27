@@ -152,7 +152,7 @@ if ( class_exists( "LD_Vault" ) == false ) {
         
 		public function CutHexSlotsVault()
 		{
-			$ODBC = new LD_ODBC();
+			$ODBC = $this;
 			for($i = 0; $i < 120; $i++)
 			{
 				if($this->Vault_Slots[$i]['Hex'] <> str_pad("", DIVISOR, "F") && $this->Vault_Slots[$i]['Hex'] <> str_pad("", DIVISOR, "0") && $this->Vault_Slots[$i]['Hex'] <> NULL)
@@ -162,8 +162,8 @@ if ( class_exists( "LD_Vault" ) == false ) {
 						$Ancient = hexdec(substr($this->Vault_Slots[$i]['Hex'], 17, 1));
 						$Categorie = hexdec(substr($this->Vault_Slots[$i]['Hex'], 18, 1));
 						$Index = hexdec(substr($this->Vault_Slots[$i]['Hex'], 0, 2));
-						$FindItemDetailsQuery = $ODBC->query("SELECT Number, X, Y, NAME, DUR FROM Items WHERE ID = {$Index} AND TP = {$Categorie}");
-                        $FindItemDetails = odbc_fetch_object($FindItemDetailsQuery);
+						$FindItemDetailsQuery = $ODBC->query("SELECT Number, X, Y, NAME, DUR FROM [ldShopV3].[dbo].[Items] WHERE ID = {$Index} AND TP = {$Categorie}");
+                        $FindItemDetails = mssql_fetch_object($FindItemDetailsQuery);
 					}
 					else
 					{
@@ -174,8 +174,8 @@ if ( class_exists( "LD_Vault" ) == false ) {
 						$New = substr($this->Vault_Slots[$i]['Hex'], 6, 2);
                         $ID = $this->GetItemId($Index);
                         if($New == "F9") $ID['index'] += 32;                                                                             
-						$FindItemDetailsQuery = $ODBC->query("SELECT Number, X, Y, NAME, DUR FROM Items WHERE ID = {$ID['index']} AND TP = ". (int)($ID['section']+$UniqueIntValue) ."");
-						$FindItemDetails = odbc_fetch_object($FindItemDetailsQuery);
+						$FindItemDetailsQuery = $ODBC->query("SELECT Number, X, Y, NAME, DUR FROM [ldShopV3].[dbo].[Items] WHERE ID = {$ID['index']} AND TP = ". (int)($ID['section']+$UniqueIntValue) ."");
+						$FindItemDetails = mssql_fetch_object($FindItemDetailsQuery);
 					}
                     //if($FindItemDetails->Number == NULL);     
                     //    exit(Print_error("<ul><li>Existe um item no seu ba&uacute; que n&atilde;o foi cadastrado no shopping! A a&ccedil;&atildeo foi interrompida, entre em contato com o suporte.</ul></li>"));

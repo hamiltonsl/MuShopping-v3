@@ -61,11 +61,11 @@ if ( class_exists( "Coupons" ) == false ) {
             
             if($dateBegin > $dateEnd) exit("<ul><li>Erro, a data de in&iacute;cio &eacute; maior que a data do t&eacute;rmino.</li></ul>");
             
-            $findCouponExistQuery = $ODBC->query("SELECT couponCode FROM CouponCodes WHERE couponCode='{$couponCode}'");
-            $findCouponExist = odbc_fetch_object($findCouponExistQuery);
+            $findCouponExistQuery = $ODBC->query("SELECT couponCode FROM [ldShopV3].[dbo].[CouponCodes] WHERE couponCode='{$couponCode}'");
+            $findCouponExist = mssql_fetch_object($findCouponExistQuery);
             if($findCouponExist->couponCode == $couponCode) exit("<ul><li>Erro, esse cupon j&aacute; existe.</li></ul>");
             
-            if($ODBC->query("INSERT INTO CouponCodes (`couponCode`, `percent`, `active`, `dateBegin`, `dateEnd`) VALUES ('{$couponCode}', {$percent}, {$active}, '{$dateBegin}', '{$dateEnd}');") == true)
+            if($ODBC->query("INSERT INTO [ldShopV3].[dbo].[CouponCodes] ([couponCode], [percent], [active], [dateBegin], [dateEnd]) VALUES ('{$couponCode}', {$percent}, {$active}, '{$dateBegin}', '{$dateEnd}');") == true)
                 echo "<ul><li>Cupon salvo com sucesso.</li></ul>";
             else
                 echo "<ul><li>Erro ao inserir cupon.</li></ul>"; 
@@ -73,8 +73,8 @@ if ( class_exists( "Coupons" ) == false ) {
         private function loadCoupons()
         {
             global $ODBC;
-            $memoryCouponsQuery = $ODBC->query("SELECT id, couponCode FROM CouponCodes ORDER BY couponCode");
-            while($memoryCoupons = odbc_fetch_object($memoryCouponsQuery))
+            $memoryCouponsQuery = $ODBC->query("SELECT id, couponCode FROM [ldShopV3].[dbo].[CouponCodes] ORDER BY couponCode");
+            while($memoryCoupons = mssql_fetch_object($memoryCouponsQuery))
                 $this->memoryCoupons[] = $memoryCoupons;
         }
         private function loadFormAlterCouponSelect()
@@ -91,8 +91,8 @@ if ( class_exists( "Coupons" ) == false ) {
         {    
             global $ODBC;
             if(is_numeric($_GET['number']) == false) exit("<ul><li>Erro, N&uacute;mero inv&aacute;lido.</li></ul>");
-            $findDetailsCouponQuery = $ODBC->query("SELECT * FROM CouponCodes WHERE id = ". $_GET['number']);
-            $findDetailsCoupon = odbc_fetch_object($findDetailsCouponQuery);
+            $findDetailsCouponQuery = $ODBC->query("SELECT * FROM [ldShopV3].[dbo].[CouponCodes] WHERE id = ". $_GET['number']);
+            $findDetailsCoupon = mssql_fetch_object($findDetailsCouponQuery);
             echo "<form action=\"\" method=\"POST\" id=\"manager\" name=\"manager\">";                      
             echo "Nome do cupon:<br />\n<input id=\"couponCode\" name=\"couponCode\" type=\"text\" value=\"{$findDetailsCoupon->couponCode}\" readonly=\"readonly\" /><br />\n"; 
             echo "Porcentagem de desconto:<br />\n<input type=\"text\" value=\"{$findDetailsCoupon->percent}\" id=\"percent\" name=\"percent\" /><br />\n";   
@@ -120,13 +120,13 @@ if ( class_exists( "Coupons" ) == false ) {
                                                                                                                                       
             if($dateBegin > $dateEnd) exit("<ul><li>Erro, a data de in&iacute;cio &eacute; maior que a data do t&eacute;rmino.</li></ul>");
            
-            if($ODBC->query("UPDATE CouponCodes SET 
-                            `couponCode` = '{$couponCode}', 
-                            `percent` = {$percent}, 
-                            `active` = {$active}, 
-                            `dateBegin` = '{$dateBegin}', 
-                            `dateEnd` = '{$dateEnd}'
-                            WHERE `couponCode` = '{$couponCode}'") == true)
+            if($ODBC->query("UPDATE [ldShopV3].[dbo].[CouponCodes] SET 
+                            [couponCode] = '{$couponCode}', 
+                            [percent] = {$percent}, 
+                            [active] = {$active}, 
+                            [dateBegin] = '{$dateBegin}', 
+                            [dateEnd] = '{$dateEnd}'
+                            WHERE [couponCode] = '{$couponCode}'") == true)
                 echo "<ul><li>Cupon salvo com sucesso.</li></ul>";
             else
                 echo "<ul><li>Erro ao inserir cupon.</li></ul>"; 
@@ -146,7 +146,7 @@ if ( class_exists( "Coupons" ) == false ) {
         {
             global $ODBC;
             if(is_numeric($_GET['number']) == false) exit("<ul><li>Erro, N&uacute;mero inv&aacute;lido.</li></ul>");
-            if($ODBC->query("DELETE FROM CouponCodes WHERE id=". $_GET['number']) == true)
+            if($ODBC->query("DELETE FROM [ldShopV3].[dbo].[CouponCodes] WHERE id=". $_GET['number']) == true)
                 echo "<ul><li>Cupon deletado com sucesso.</li></ul>";
             else
                 echo "<ul><li>Erro ao deletar cupom, tenta novamente.</li></ul>";     
