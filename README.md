@@ -3,9 +3,17 @@ A principal alteração foi remover o requisito dos drivers ODBC (Access) de mod
 
 Adatapção realizada no [MuShopping-v3](https://github.com/daldegam/MuShopping-v3) com permissão do autor [Leandro Daldegam](https://github.com/daldegam/).
 
+----------
+
 ### Instalação:
-Para usar esse shopping, agora é necessária uma etapa adicional.
-Criar um novo banco de dados chamado **ldShopV3** e importar o conteúdo do modules/items/items.mdb.
+Para usar esse shopping, agora é necessária uma etapa adicional. 
+
+1. Criar um novo banco de dados chamado **ldShopV3**.
+2. Executar o script *shopping/sql scripts/ldShopV3_SQL2005.sql*.
+
+----------
+
+### Opcional: Migração (Access -> SQL Server) (avançado/experimental):
 
 Para importar o banco de dados do Access:
 
@@ -13,6 +21,8 @@ Para importar o banco de dados do Access:
 > Para o correto funcionamento do SSMA, é **necessária** a instalação do [Microsoft Access 2010 Runtime](https://www.microsoft.com/en-us/download/details.aspx?id=10910) ou superior.
 
 2. Execute o *Microsoft SQL Server Migration Assistant for Access*. 
-3. Siga as instruções do assistente, não há necessidade de nenhuma configuração em especial.
+3. Siga as instruções do assistente e selecione o arquivo *shopping/modules/items/items.mdb*.
 
-Ao finalizar o procedimento, recomendo **deletar** o arquivo *modules/items.items.mdb*.
+Ao finalizar o procedimento, recomendo **deletar** o arquivo *shopping/modules/items.items.mdb*.
+
+**Observação:** É recomendável usar o script SQL para efetuar uma instalação limpa, eu fiz alguns pequenos ajustes no banco de dados.
